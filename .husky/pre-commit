@@ -1,4 +1,14 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
+# --node表示使用本地的lint-staged,-- 是命令分隔符代表传参结束
 npx --no -- lint-staged
+
+# lint-staged是用于在通过git提交代码之前，对暂存区的代码执行一系列的格式化。
+# npx 查找规则
+# 1.在项目/node_modules/.bin找
+# 2.1没有去全局安装的命令中找
+# 3.2没有则创建一个临时目录,下载命令对应的以来,然后执行,执行完成后删除这个目录
+
+# npx 主要用于命令行的寻址等辅助功能上，而 npm 是管理依赖的。
+
