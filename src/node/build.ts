@@ -1,28 +1,46 @@
-import * as path from 'path'
-import * as fs from 'fs-extra'
+import ora from 'ora'
+import path, { join } from 'path'
+import fs from 'fs-extra'
+import { pathToFileURL, fileURLToPath } from 'url'
 import { build as viteBuild, InlineConfig } from 'vite'
-import { CLIENT_ENTRY_PATH, PACKAGE_ROOT, SERVER_ENTRY_PATH } from './constant'
+import { CLIENT_ENTRY_PATH, SERVER_ENTRY_PATH } from './constant'
 import type { RollupOutput } from 'rollup'
 
+// const dynamicImport = new Function('m', 'return import(m)')
+
 export async function bundle(root: string) {
-  try {
-    console.log('building client + server bundles...')
-    const resolveViteConfig = (isServer: boolean): InlineConfig => {
-      return {
-        mode: 'production',
-        root,
-        build: {
-          ssr: isServer,
-          outDir: isServer ? '.temp' : 'build',
-          rollupOptions: {
-            input: isServer ? SERVER_ENTRY_PATH : CLIENT_ENTRY_PATH,
-            output: {
-              format: isServer ? 'cjs' : 'esm',
-            },
+  const resolveViteConfig = (isServer: boolean): InlineConfig => {
+    return {
+      mode: 'production',
+      root,
+      build: {
+        ssr: isServer,
+        outDir: isServer ? '.temp' : 'build',
+        rollupOptions: {
+          input: isServer ? SERVER_ENTRY_PATH : CLIENT_ENTRY_PATH,
+          output: {
+            format: isServer ? 'cjs' : 'esm',
           },
         },
-      }
+      },
     }
+  }
+
+  /**
+   * @tsc打包
+   * @仅这样子写tsc依然会将import打包成require的形式还是cjs不能引入ejs
+   *  const { default: ora } = await import('ora')
+   * @应该改成这样
+   * const dynamicImport = new Function('m', 'return import(m)')
+   * const { default: ora } = await dynamicImport('ora')
+   *
+   * @tsup打包上面的方法就不用了直接import
+   */
+
+  const spinner = ora()
+  spinner.start('building client + server bundles...')
+
+  try {
     const clientBuild = async () => {
       return viteBuild(resolveViteConfig(false))
     }
@@ -36,6 +54,7 @@ export async function bundle(root: string) {
       clientBuild(),
       ServerBuild(),
     ])
+    spinner.stop()
     return [clientBundle, serverBundle] as [RollupOutput, RollupOutput]
   } catch {}
 }
@@ -62,17 +81,23 @@ export async function renderPage(
   </html>
   `.trim()
   // 写到磁盘
-  await fs.writeFile(path.join(root, 'build', 'index.html'), html)
-  await fs.remove(path.join(root, '.temp'))
+  await fs.writeFile(join(root, 'build/index.html'), html)
+  await fs.remove(join(root, '.temp'))
 }
 
 export async function build(root: string) {
   // 1.打包bundle - client端和server端
-  const [clientBundle, serverBundle] = await bundle(root)
-  debugger
+  const [clientBundle] = await bundle(root)
   // 2.引入server-entry模块
-  const serverEntryPath = path.join(PACKAGE_ROOT, root, '.temp', 'ssr-entry.js')
+  const serverEntryPath = join(root, '.temp', 'ssr-entry.js')
+  console.log(
+    '=========================',
+    pathToFileURL(serverEntryPath),
+    pathToFileURL(serverEntryPath).toString(),
+    serverEntryPath
+  )
   // 3.服务端渲染，产出HTML成ssg产物
-  const { render } = require(serverEntryPath)
+  // pathToFileURL 将path按绝对路径解析，并且转换为文件编码格式的网址 file:///F:/workspace/%E5%89%8.../ssr-entry.js
+  const { render } = await import(pathToFileURL(serverEntryPath).toString())
   await renderPage(render, root, clientBundle)
 }

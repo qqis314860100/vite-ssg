@@ -1,9 +1,11 @@
 {
   "compilerOptions": {
-    "jsx": "react-jsx",
+    "module": "ESNext",
     "outDir": "dist",
+    "rootDir": "src",
     "target": "ESNext",
-    "module": "commonjs",
-    "rootDir": "src"
+    "jsx": "react-jsx",
+    "moduleResolution": "node",
+    "esModuleInterop": true // esm允许和cjs相互操作
   }
 }
