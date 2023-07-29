@@ -29,3 +29,23 @@
   3.项目基本目录结构搭建
   4.react主题组件的前端渲染
   5.服务端渲染，产出HTML
+
+## CSR、SSR、SSG
+  CSR client side render 客户端渲染
+    没有HTML具体内容，依靠js执行完成页面渲染，依靠网络请求浏览器拿到js文件去渲染
+      问题:
+        1.首屏加载速度慢
+        2.对SEO（搜索引擎优化）不友好
+  SSR Server side render 服务端渲染
+    服务端返回完整的HTML内容
+      问题：
+        SSR页面无法进行交互事件的绑定
+      方案：
+        SSR页面中加入CSR的脚本（同构），完成事件绑定--hydration
+  SSG Static sit Generation 静态站点生成
+    构建阶段的SSR，build过程产出完整的HTML
+      优点：
+        1.服务器压力小
+        2.继承SSR首屏性能及SEO的优势
+      局限性：
+        不适用于数据经常变化的场景
