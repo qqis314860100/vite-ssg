@@ -1,0 +1,23 @@
+{
+  "name": "vite-ssg",
+  "version": "1.0.0",
+  "description": "基于vite的ssg框架开发实战",
+  "main": "index.js",
+  "scripts": {
+    "start": "tsc -w"
+  },
+  "bin": {
+    "island": "bin/island.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cac": "^6.7.14",
+    "islandjs": "^0.7.31"
+  },
+  "devDependencies": {
+    "@types/node": "^20.4.5",
+    "typescript": "^5.1.6",
+    "vite": "^4.4.7"
+  }
+}
