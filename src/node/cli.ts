@@ -8,7 +8,6 @@ const cli = cac('island').version('0.0.1').help()
 // 3.island
 
 cli.command('dev [root]', 'start dev server').action(async (root: string) => {
-  console.log('dev2222', root)
   const server = await createDevServer(root)
   await server.listen()
   // 打印服务器的地址
