@@ -1,0 +1,8 @@
+node_modules
+package.json
+dist
+bin
+esm-cjs
+docs
+pnpm-lock.yaml
+.eslintrc.cjs

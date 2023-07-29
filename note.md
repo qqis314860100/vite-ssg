@@ -70,3 +70,22 @@
     var getDirname = () => path.dirname(getFilename())
     var __dirname = /* @__PURE__ */ getDirname()
 ```
+```ts
+ // husky 配置
+ npm i husky -D
+ npx husky install
+ npx husky add .husky/pre-commit "npm run lint"
+// commit 检查
+npm i commitlint @commitlint/cli @commitlint/config-conventional -D
+// 强制采用项目里的这个commitlint命令
+npx husky add .husky/commit-msg "npx --no-install commitlint --edit "$1""
+// 但是为了避免更新一处代码就将项目全量代码去检测，减轻eslint的负担,加入下面的代码
+// package.json
+"lint-staged": {
+    "**/*.{js,jsx,tsx,ts}": [
+      "npm run lint"
+    ]
+  },
+// 同时将 .husky/pre-commit中
+npm run lint -> npx --no --lint-staged
+```

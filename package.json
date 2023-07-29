@@ -5,19 +5,40 @@
   "main": "index.js",
   "scripts": {
     "start-tsx": "tsc -w",
+    "build": "tsup",
     "start": "tsup --watch",
-    "build": "tsup"
+    "preview": "cd build && serve .",
+    "lint": "eslint --fix --ext .ts,.tsx,.js,.jsx ./",
+    "prepare": "husky install"
   },
   "bin": {
     "island": "bin/island.js"
   },
+  "lint-staged": {
+    "**/*.{js,jsx,tsx,ts}": [
+      "npm run lint"
+    ]
+  },
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@commitlint/cli": "^17.6.7",
+    "@commitlint/config-conventional": "^17.6.7",
     "@types/fs-extra": "^9.0.13",
     "@types/node": "^18.11.7",
     "@types/react": "^18.0.24",
     "@types/react-dom": "^18.0.8",
+    "@typescript-eslint/eslint-plugin": "^6.2.0",
+    "@typescript-eslint/parser": "^6.2.0",
+    "commitlint": "^17.6.7",
+    "eslint": "^8.46.0",
+    "eslint-config-prettier": "^8.9.0",
+    "eslint-plugin-prettier": "^5.0.0",
+    "eslint-plugin-react": "^7.33.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "husky": "^8.0.3",
+    "lint-staged": "^13.2.3",
+    "prettier": "^3.0.0",
     "rollup": "^3.2.3",
     "serve": "^14.0.1",
     "tsup": "^6.5.0",
