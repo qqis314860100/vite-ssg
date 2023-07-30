@@ -2,8 +2,11 @@ import { createServer } from 'vite';
 import { pluginIndexHtml } from './plugin-island/indexHtml';
 import PluginReact from '@vitejs/plugin-react';
 import { PACKAGE_ROOT } from './constant';
+import { resolveConfig } from './config';
 
-export function createDevServer(root: string) {
+export async function createDevServer(root: string) {
+  const config = await resolveConfig(root, 'serve', 'development');
+  console.log(config);
   return createServer({
     root,
     // PluginReact 热更新保存react状态的插件
