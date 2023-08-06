@@ -6,6 +6,8 @@
     "target": "ESNext",
     "jsx": "react-jsx",
     "moduleResolution": "node",
-    "esModuleInterop": true // esm允许和cjs相互操作
-  }
+    "esModuleInterop": true, // esm允许和cjs相互操作
+    "baseUrl": "src"
+  },
+  "include": ["e2e/**/*.ts", "src/**/*.ts", "src/**/*.tsx"]
 }

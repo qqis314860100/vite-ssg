@@ -91,12 +91,7 @@ export async function build(root: string) {
   const [clientBundle] = await bundle(root);
   // 2.引入server-entry模块
   const serverEntryPath = join(root, '.temp', 'ssr-entry.js');
-  console.log(
-    '=========================',
-    pathToFileURL(serverEntryPath),
-    pathToFileURL(serverEntryPath).toString(),
-    serverEntryPath
-  );
+
   // 3.服务端渲染，产出HTML成ssg产物
   // pathToFileURL 将path按绝对路径解析，并且转换为文件编码格式的网址 file:///F:/workspace/%E5%89%8.../ssr-entry.js
   const { render } = await import(pathToFileURL(serverEntryPath).toString());
